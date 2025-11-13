@@ -1,0 +1,32 @@
+package test
+
+import (
+	"fmt"
+	"testing"
+	"time"
+
+	"github.com/gruntwork-io/terratest/modules/http-helper"
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestTerraformaws(t *testing.T) {
+	t.Parallel()
+
+	const httpport = "80"
+	terraformOptions := &terraform.Options{
+		TerraformDir: "../",
+	}
+
+	publicIp := terraform.Output(t, terraformOptions, "instance_public_ip")
+
+	url := fmt.Sprintf("http://%s:%s", publicIp, httpport)
+
+	http_helper.HttpGetWithRetry(
+		t, url, nil,
+		200, //status code
+		"Helo World", 30, 10*time.Second,
+	)
+
+	assert.True(t, len(publicIp) > 0, "Public ip should not be empty")
+}
