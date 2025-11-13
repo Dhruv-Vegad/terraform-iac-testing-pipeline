@@ -6,12 +6,12 @@ terraform{
         }
     }
     
-    # backend "s3" {
-    # bucket = "Auto_infra_by_terraform_project"
-    # key = "terraform.tfstate"
-    # region = "ap-south-1"
-    # dynamodb_table = "state_locking_table"
-    # }
+    backend "s3" {
+    bucket = "Auto_infra_by_terraform_project"
+    key = "terraform.tfstate"
+    region = "ap-south-1"
+    dynamodb_table = "state_locking_table"
+    }
 }
 
 provider "aws" {
@@ -21,7 +21,7 @@ provider "aws" {
 variable "server_http_port" {
     description = "The Port for the server"
     type = number
-    default = 80
+    default = 8080
 }
 
 variable "region" {

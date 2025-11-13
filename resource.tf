@@ -1,26 +1,40 @@
 resource "aws_security_group" "web_sg" {
-  ingress = {
+name = "web-sg"
+description = "Allow HTTP traffic from VPC"
+
+  ingress {
     description = "HTTP from VPC"
     from_port = var.server_http_port
     to_port   = var.server_http_port
     protocol = "tcp"
     cidr_blocks = ["10.2.0.0/16"]
   }
-  egress = {
+  egress {
     description = "All outbound"
     from_port = 0
     to_port   = 0
     protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.3.0.0/16"]
+  }
+  tags =  {
+    Name = "web-sg"
   }
 }
 
 resource "aws_instance" "ec2-instance" {
-  ami           = "ami-0016dcd3c5ec3c94d"
+  ami = "ami-0016dcd3c5ec3c94d"
   instance_type = "t2.micro"
 
+    root_block_device {
+      encrypted = true  
+    }
 
-  vpc_security_group_ids = [aws_security_group.aws_security_group.web_sg.id]
+    metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
   
   subnet_id = "subnet-01a456c8f9df7db15"
   associate_public_ip_address = true
