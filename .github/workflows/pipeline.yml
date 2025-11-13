@@ -23,7 +23,7 @@ jobs:
               uses: hashicorp/setup-terraform@v2
 
             - name: Terraform Init
-              run: terraform init -backend-config= "auto-infra-by-terraform-project"
+              run: terraform init -backend-config="bucket=auto-infra-by-terraform-project"
 
             - name: Terraform Validate
               run: terraform validate
@@ -56,11 +56,11 @@ jobs:
               with:
                 go-version: '1.21'
             
-            # - name: Getting Dependencies
-            #   run: |
-            #     go get github.com/gruntwork-io/terratest/modules/terraform
-            #     go get github.com/gruntwork-io/terratest/modules/http-helper
-            #     go get github.com/stretchr/testify/assert
+            - name: Getting Dependencies
+              run: |
+                go get github.com/gruntwork-io/terratest/modules/terraform
+                go get github.com/gruntwork-io/terratest/modules/http-helper
+                go get github.com/stretchr/testify/assert
 
             - name: Terraform Init
               run: terraform init -backend-config="bucket=auto-infra-by-terraform-project"
