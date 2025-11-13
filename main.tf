@@ -6,12 +6,12 @@ terraform{
         }
     }
     
-    # backend "s3" {
-    # bucket = "Auto_infra_by_terraform_project"
-    # key = "terraform.tfstate"
-    # region = "ap-south-1"
-    # dynamodb_table = "state_locking_table"
-    # }
+    backend "s3" {
+    bucket = "Auto_infra_by_terraform_project"
+    key = "terraform.tfstate"
+    region = "ap-south-1"
+    dynamodb_table = "state_locking_table"
+    }
 }
 
 provider "aws" {
