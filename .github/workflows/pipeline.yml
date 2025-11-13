@@ -1,0 +1,84 @@
+name: Terraform CI/CD pipeline
+
+on:
+    pull_request:
+
+permissions:
+    id-token: write
+    contents: read
+    pull-requests: write
+
+jobs:
+    static-test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: arn:aws:iam::123456789012:role/GitHubAction-Terraform-Role
+                  aws-region: ap-south-1
+            - name: Set up Terraform
+              uses: hashicorp/setup-terraform@v2
+
+            - name: Terraform Init
+              run: terraform init -backend-config= "auto-infra-by-terraform-project"
+
+            - name: Terraform Validate
+              run: terraform validate
+
+            - name: TfSec Test
+              uses: aquasecurity/tfsec-action@v1.0.3
+              with:
+                working_directory: ./
+            
+            - name: Terraform Plan
+              run: terraform plan -out=tfplan_job1
+
+    dynamic_test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                 role-to-assume: arn:aws:iam::123456789012:role/GitHubAction-Terraform-Role
+                 aws-region: ap-south-1
+
+            - name: Terrafotrm Setup
+              uses: hashicorp/setup-terraform@v2
+
+            - name: Setup Go
+              uses: actions/setup-go@v3
+              with:
+                go-version: '1.21'
+
+            - name: Terraform Init
+              run: terraform init -backend-config= "auto-infra-by-terraform-project"
+            
+            - name: Create Workspace
+              run: terraform workspace new pr-${{github.event.number}} || terraform workspace select pr-${{github.event.number}}
+
+            - name: Temporary infra
+              run: terraform apply -auto-approve
+
+            - name: Terraform Plan
+              run: terraform plan -out=tfplan_job2
+
+            - name: Infrastructure test
+              run: |
+                cd test
+                go mod init terraset-mod
+                go mod tidy
+                go test -v -timeout 10m
+
+            - name: Destroy the Temorary Infra
+              if: always()
+              run: |
+                echo "Wait for a moment the infra is being destroyed.........."
+                terraform destroy -auto-approve
+                echo "Wait for a moment the infra is being destroyed"
+                terraform workspace select default
+                terraform workspace delete pr-${{github.event.number}}

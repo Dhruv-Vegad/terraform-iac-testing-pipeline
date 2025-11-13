@@ -5,20 +5,36 @@ terraform{
             version = "~> 4.0"
         }
     }
+    
+    # backend "s3" {
+    # bucket = "Auto_infra_by_terraform_project"
+    # key = "terraform.tfstate"
+    # region = "ap-south-1"
+    # dynamodb_table = "state_locking_table"
+    # }
 }
 
-resource "aws_instance" "infra-ec2-instance" {
-    ami           = "ami-02b8269d5e85954ef"
-    instance_type = "t2.micro"
+provider "aws" {
+  region = "ap-south-1"
 }
 
-resource "aws_s3_bucket" "auto-infra-project-s3" {
-    bucket = "auto-infra-project-bucket-s3"
+variable "server_http_port" {
+    description = "The Port for the server"
+    type = number
+    default = 80
 }
 
-resource "aws_s3_bucket_versioning" "versioning" {
-    bucket = "auto-infra-project-bucket-s3"
-    versioning_configuration {
-      status = "Enabled"
-    }
+variable "region" {
+  description = "region specified here"
+    type = string
+  default = "ap-south-1"
+}
+
+output "aws_region"{
+    value = var.region
+}
+
+output "instance_public_ip" {
+  description = "Public IP address of the web server."
+  value       = aws_instance.ec2-instance.public_ip
 }
