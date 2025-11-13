@@ -1,17 +1,23 @@
 resource "aws_security_group" "web_sg" {
-  ingress = {
+name = "web-sg"
+description = "Allow HTTP traffic from VPC"
+
+  ingress {
     description = "HTTP from VPC"
     from_port = var.server_http_port
     to_port   = var.server_http_port
     protocol = "tcp"
     cidr_blocks = ["10.2.0.0/16"]
   }
-  egress = {
+  egress {
     description = "All outbound"
     from_port = 0
     to_port   = 0
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags =  {
+    Name = "web-sg"
   }
 }
 
