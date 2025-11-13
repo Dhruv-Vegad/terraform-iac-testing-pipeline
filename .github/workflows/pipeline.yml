@@ -77,7 +77,6 @@ jobs:
             - name: Infrastructure test
               run: |
                 cd test
-                go mod init terraset-mod
                 go mod tidy
                 go test -v -timeout 10m
 
