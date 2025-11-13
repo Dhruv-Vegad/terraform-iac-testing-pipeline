@@ -41,11 +41,11 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
-              
+
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
-                 role-to-assume: arn:aws:iam::123456789012:role/GitHubAction-Terraform-Role
+                 role-to-assume: arn:aws:iam::807919226370:role/GitHubAction-Terraform-Role
                  aws-region: ap-south-1
 
             - name: Terrafotrm Setup
@@ -56,14 +56,14 @@ jobs:
               with:
                 go-version: '1.21'
             
-            - name: Getting Dependencies
-              run: |
-                go get github.com/gruntwork-io/terratest/modules/terraform
-                go get github.com/gruntwork-io/terratest/modules/http-helper
-                go get github.com/stretchr/testify/assert
+            # - name: Getting Dependencies
+            #   run: |
+            #     go get github.com/gruntwork-io/terratest/modules/terraform
+            #     go get github.com/gruntwork-io/terratest/modules/http-helper
+            #     go get github.com/stretchr/testify/assert
 
             - name: Terraform Init
-              run: terraform init -backend-config= "auto-infra-by-terraform-project"
+              run: terraform init -backend-config="bucket=auto-infra-by-terraform-project"
             
             - name: Create Workspace
               run: terraform workspace new pr-${{github.event.number}} || terraform workspace select pr-${{github.event.number}}
