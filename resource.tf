@@ -22,15 +22,18 @@ description = "Allow HTTP traffic from VPC"
 }
 
 resource "aws_instance" "ec2-instance" {
-  ami           = "ami-0016dcd3c5ec3c94d"
+  ami = "ami-0016dcd3c5ec3c94d"
   instance_type = "t2.micro"
+
     root_block_device {
-      encrypted = true
+      encrypted = true  
     }
 
     metadata_options {
-      http_tokens = "required"
-    }
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
   vpc_security_group_ids = [aws_security_group.web_sg.id]
   
   subnet_id = "subnet-01a456c8f9df7db15"
