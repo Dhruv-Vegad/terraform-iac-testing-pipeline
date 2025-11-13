@@ -14,7 +14,7 @@ description = "Allow HTTP traffic from VPC"
     from_port = 0
     to_port   = 0
     protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.3.0.0/16"]
   }
   tags =  {
     Name = "web-sg"
@@ -24,8 +24,13 @@ description = "Allow HTTP traffic from VPC"
 resource "aws_instance" "ec2-instance" {
   ami           = "ami-0016dcd3c5ec3c94d"
   instance_type = "t2.micro"
+    root_block_device {
+      encrypted = true
+    }
 
-
+    metadata_options {
+      http_tokens = "required"
+    }
   vpc_security_group_ids = [aws_security_group.web_sg.id]
   
   subnet_id = "subnet-01a456c8f9df7db15"
