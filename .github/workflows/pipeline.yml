@@ -103,7 +103,7 @@ jobs:
               if: always()
               run: |
                 echo "Wait for a moment the infra is being destroyed.........."
-                terraform destroy -auto-approve
+                terraform destroy -auto-approve -var="tester_ip=${{ steps.get_ip.outputs.ip }}"
                 echo "Wait for a moment the infra is being destroyed"
                 terraform workspace select default
                 terraform workspace delete pr-${{github.event.number}}
