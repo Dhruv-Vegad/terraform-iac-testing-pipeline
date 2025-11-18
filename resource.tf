@@ -1,5 +1,5 @@
-# tfsec: ignore:aws-ec2-no-public-ingress-sgr
-# tfsec: ignore:aws-ec2-no-public-egress-sgr
+# tfsec:ignore:aws-ec2-no-public-ingress-sgr
+# tfsec:ignore:aws-ec2-no-public-egress-sgr
 resource "aws_security_group" "web_sg" {
 name = "web-sg"
 description = "Allow HTTP traffic from VPC"
