@@ -50,8 +50,10 @@ jobs:
                  role-to-assume: arn:aws:iam::807919226370:role/GitHubAction-Terraform-Role
                  aws-region: ap-south-1
 
-            - name: Terrafotrm Setup
-              uses: hashicorp/setup-terraform@v2
+            - name: terraform Setup
+              uses: hashicorp/setup-terraform@v3
+              with:
+                terraform_wrapper: false
 
             - name: Setup Go
               uses: actions/setup-go@v5
