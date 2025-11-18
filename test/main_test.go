@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gruntwork-io/terratest/modules/http-helper"
+	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 )
@@ -13,7 +13,7 @@ import (
 func TestTerraformaws(t *testing.T) {
 	t.Parallel()
 
-	const httpport = "80"
+	expectedPort := "80"
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../",
 	}
@@ -23,7 +23,7 @@ func TestTerraformaws(t *testing.T) {
 
 	publicIp := terraform.Output(t, terraformOptions, "instance_public_ip")
 
-	url := fmt.Sprintf("http://%s:%s", publicIp, httpport)
+	url := fmt.Sprintf("http://%s:%s", publicIp, expectedPort)
 
 	http_helper.HttpGetWithRetry(
 		t, url, nil,
