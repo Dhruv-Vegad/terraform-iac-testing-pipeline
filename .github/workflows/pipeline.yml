@@ -19,8 +19,10 @@ jobs:
               with:
                   role-to-assume: arn:aws:iam::807919226370:role/GitHubAction-Terraform-Role
                   aws-region: ap-south-1
-            - name: Set up Terraform
+            - name: Setup Terraform
               uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_wrapper: false
 
             - name: Terraform Init
               run: terraform init -backend-config="bucket=auto-infra-by-terraform-project"
