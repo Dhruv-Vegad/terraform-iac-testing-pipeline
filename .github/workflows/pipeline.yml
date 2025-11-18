@@ -72,8 +72,18 @@ jobs:
             - name: Create Workspace
               run: terraform workspace new pr-${{github.event.number}} || terraform workspace select pr-${{github.event.number}}
 
+
+            - name: Get Runner Public IP
+              id: get_ip
+              run: echo "ip=$(curl -s https://checkip.amazonaws.com)" >> $GITHUB_OUTPUT
+
+            - name: Show IP
+              run: echo "Runner IP is ${{ steps.get_ip.outputs.ip }}"
+
+
             - name: Temporary infra
-              run: terraform apply -auto-approve
+              run: terraform apply -auto-approve -var="tester_ip=${{ steps.get_ip.outputs.ip }}"
+
 
             - name: Terraform Plan
               run: terraform plan -out=tfplan_job2

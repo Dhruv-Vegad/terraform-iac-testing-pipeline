@@ -9,12 +9,12 @@ description = "Allow HTTP traffic from VPC"
     from_port = var.server_http_port
     to_port   = var.server_http_port
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${var.tester_ip}/32"]
   }
   egress {
     description = "All outbound"
-    from_port = 0
-    to_port   = 0
+    from_port = 443
+    to_port   = 443
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
