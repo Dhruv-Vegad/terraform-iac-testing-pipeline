@@ -24,7 +24,7 @@ func TestTerraformaws(t *testing.T) {
 	serverPort := terraform.Output(t, terraformOptions, "server_port")
 	expectedPort := "80"
 	if serverPort != expectedPort {
-		t.Fatalf("The port should be '%s' and not '%s'", expectedPort, serverPort)
+		t.Fatalf("Attention: Server port is '%s' , must be '%s'", serverPort, expectedPort)
 	}
 
 	url := fmt.Sprintf("http://%s:%s", publicIp, expectedPort)
