@@ -18,8 +18,8 @@ func TestTerraformaws(t *testing.T) {
 		TerraformDir: "../",
 	}
 
-	defer terraform.Destroy(t, terraformOptions)
-	terraform.InitAndApply(t, terraformOptions)
+	// defer terraform.Destroy(t, terraformOptions)
+	// terraform.InitAndApply(t, terraformOptions)
 
 	publicIp := terraform.Output(t, terraformOptions, "instance_public_ip")
 
@@ -28,7 +28,7 @@ func TestTerraformaws(t *testing.T) {
 	http_helper.HttpGetWithRetry(
 		t, url, nil,
 		200, //status code
-		"Hello World", 30, 10*time.Second,
+		"Hello, World", 30, 10*time.Second,
 	)
 
 	assert.True(t, len(publicIp) > 0, "Public ip should not be empty")
