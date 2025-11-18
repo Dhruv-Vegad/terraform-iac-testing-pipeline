@@ -12,17 +12,17 @@ import (
 
 func TestTerraformaws(t *testing.T) {
 	t.Parallel()
-	expectedPort := "80"
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../",
 	}
-	serverPort := terraform.Output(t, terraformOptions, "server_port")
 
 	// defer terraform.Destroy(t, terraformOptions)
 	// terraform.InitAndApply(t, terraformOptions)
 
 	publicIp := terraform.Output(t, terraformOptions, "instance_public_ip")
 
+	serverPort := terraform.Output(t, terraformOptions, "server_port")
+	expectedPort := "80"
 	if serverPort != expectedPort {
 		t.Fatalf("The port should be '%s' and not '%s'", expectedPort, serverPort)
 	}

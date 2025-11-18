@@ -27,3 +27,7 @@ output "instance_public_ip" {
   description = "Public IP address of the web server."
   value       = aws_instance.ec2-instance.public_ip
 }
+
+output "server_port" {
+  value = var.server_http_port
+}
